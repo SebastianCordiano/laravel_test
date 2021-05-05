@@ -66,6 +66,7 @@ class ArticlesCrudController extends CrudController
 
         CRUD::field('title');
         CRUD::field('categories')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
+        // CRUD::field('categories')->label('SubCategory')->type('relationship')->options(function ($query){return $query->where('type', 'SubCategory')->get();});
         CRUD::field('abstract');
         CRUD::field('content');
 

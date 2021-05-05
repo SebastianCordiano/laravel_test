@@ -15,10 +15,8 @@ class CreateArticlesCategoriesTable extends Migration
     {
         Schema::create('articles_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('articles_id');
-            $table->foreign('articles_id')->references('id')->on('articles');
-            $table->unsignedBigInteger('categories_id');
-            $table->foreign('categories_id')->references('id')->on('categories');
+            $table->foreignId('articles_id')->constrained()->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignId('categories_id')->constrained()->onUpdate("cascade")->onDelete("cascade");
         });
     }
 
