@@ -11,8 +11,8 @@
 <p></p>
 <p>Sono stati impostati:</p>
 <ul>
-<li>Due CRUD (Articles e Categories)<li>
-<li>Seeding con gli utenti e permessi(non impostati in view)
+<li>Due CRUD (Articles e Categories)</li>
+<li>Seeding con gli utenti e permessi(non impostati in view)</li>
     <ul><li> superadmin@webpills.it pw:superadmin</li>
         <li> admin@webpills.it pw: admin</li>
         <li> editor@webpills.it pw:editor</li></ul>
