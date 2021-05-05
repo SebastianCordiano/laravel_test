@@ -43,7 +43,7 @@ class Categories extends Model
             ]
         ];
     }
-    public function boats(){
+    public function articles(){
         return $this->belongsToMany(Articles::class);
     }
     /*

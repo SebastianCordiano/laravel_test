@@ -42,7 +42,7 @@ class Articles extends Model
             ]
         ];
     }
-    public function boat_collections(){
+    public function categories(){
         return $this->belongsToMany(Categories::class);
     }
     // protected $hidden = [];

@@ -43,7 +43,7 @@ class ArticlesCrudController extends CrudController
         CRUD::column('id');
         CRUD::column('title');
         CRUD::column('slug');
-        CRUD::column('boat_collections');
+        CRUD::column('categories');
         CRUD::column('abstract');
         CRUD::column('content');
 
@@ -65,7 +65,7 @@ class ArticlesCrudController extends CrudController
         CRUD::setValidation(ArticlesRequest::class);
 
         CRUD::field('title');
-        CRUD::field('boat_collections')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
+        CRUD::field('categories')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
         CRUD::field('abstract');
         CRUD::field('content');
 
@@ -86,7 +86,7 @@ class ArticlesCrudController extends CrudController
     {
         $this->setupCreateOperation();
         CRUD::field('title');
-        CRUD::field('boat_collections')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
+        CRUD::field('categories')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
         CRUD::field('abstract');
         CRUD::field('content');
     }
@@ -95,7 +95,7 @@ class ArticlesCrudController extends CrudController
         CRUD::column('id');
         CRUD::column('title');
         CRUD::column('slug');
-        CRUD::column('boat_collections');
+        CRUD::column('categories');
         CRUD::column('abstract');
         CRUD::column('content');
     }
