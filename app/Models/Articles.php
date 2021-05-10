@@ -45,9 +45,9 @@ class Articles extends Model
     public function categories(){
         return $this->belongsToMany(Categories::class);
     }
-    public function subcategories(){
-        return $this->belongsToMany(Categories::class);
-    }
+    // public function subcategories(){
+    //     return $this->belongsToMany(Categories::class);
+    // }
     // protected $hidden = [];
     // protected $dates = [];
 

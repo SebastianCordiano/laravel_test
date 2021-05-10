@@ -17,62 +17,47 @@ use Illuminate\Support\Facades\DB;
 class ArticlesCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation{store as traitStore;}
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation{update as traitUpdate;}
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation {
+        store as traitStore;
+    }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation {
+        update as traitUpdate;
+    }
     use \Backpack\CRUD\app\Http\Controllers\Operations\BulkDeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
-    public function store(){
+    public function store()
+    {
         //before store
 
         //Store
-        // $response = $this->traitStore();
+        $response = $this->traitStore();
 
         //afterstore
-        $categoria= intval($this->crud->getRequest()->request->get('categories'));
-        $subcategoria= intval($this->crud->getRequest()->request->get('subcategories')[0]);
-        $title=($this->crud->getRequest()->request->get('title'));
-        $content=($this->crud->getRequest()->request->get('content'));
-        $abstract=($this->crud->getRequest()->request->get('abstract'));
-        $article=new Articles;
-        $article->title= $title;
-        $article->content= $content;
-        $article->abstract= $abstract;
-        $article->save();
-        $articleid= $article->id;
+        $cat= $this->crud->getRequest()->request->get('Cat');
+        $sub= $this->crud->getRequest()->request->get('Sub');
+        $catsub=[$cat,$sub];
+        $this->data["entry"]->categories()->attach($catsub);
 
-        if($subcategoria!=0){
-            DB::table('articles_categories')->insert(['categories_id'=>$categoria,'articles_id'=>$articleid]);
-            DB::table('articles_categories')->insert(['categories_id'=>$subcategoria,'articles_id'=>$articleid]);
-        }else{
-            DB::table('articles_categories')->insert(['categories_id'=>$categoria,'articles_id'=>$articleid]);  
-        }
-        return redirect(url('/admin/articles'));
+        return $response;
     }
-    public function update(){
+    public function update()
+    {
         //before update
-        
+
         //update
-        // $response = $this->traitUpdate();
+        $response = $this->traitUpdate();
 
         //after update
-		$categoria= intval($this->crud->getRequest()->request->get('categories'));
-        $subcategoria= intval($this->crud->getRequest()->request->get('subcategories')[0]);
-        $title=($this->crud->getRequest()->request->get('title'));
-        $content=($this->crud->getRequest()->request->get('content'));
-        $abstract=($this->crud->getRequest()->request->get('abstract'));
-        $articleid= ($this->crud->getRequest()->request->get('id'));
-        $a=Articles::where('id',$articleid)->updateOrInsert(['title'=>$title,'content'=>$content,'abstract'=>$abstract]);
-        
-
-        if($subcategoria!=0){
-            DB::table('articles_categories')->where('articles_id',$articleid)->where('categories_id','1')->update(['categories_id'=> $categoria]);
-            DB::table('articles_categories')->where('articles_id',$articleid)->where('categories_id','2')->update(['categories_id'=> $subcategoria]);
-            
-        }else{
-            DB::table('articles_categories')->where('articles_id',$articleid)->where('categories_id',1)->update(['categories_id'=> $categoria]);  
+        $cat= $this->crud->getRequest()->request->get('Cat');
+        $sub= $this->crud->getRequest()->request->get('Sub');
+        $catsub=[$cat,$sub];
+        if($sub == null){
+            $this->data["entry"]->categories()->sync($cat);
+        } else {
+            $this->data["entry"]->categories()->sync($catsub);
         }
-        return redirect(url('/admin/articles'));
+        return $response;
     }
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -114,13 +99,30 @@ class ArticlesCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
+
     protected function setupCreateOperation()
     {
         CRUD::setValidation(ArticlesRequest::class);
 
         CRUD::field('title');
-        CRUD::field('categories')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
-        CRUD::field('subcategories')->label('SubCategory')->type('customselect')->options(function ($query){return $query->where('type', 'SubCategory')->get();});
+        $categories = Categories::where('type','Category')->pluck('name', 'id')->all();
+        CRUD::addField([
+            'name'        => 'Cat',
+            'label'       => "Categories",
+            'type'        => 'select_from_array',
+            'options'     => $categories,
+            'allows_null' => false,
+            'default'     => 'one',
+        ]);
+        $subcategories = Categories::where('type','SubCategory')->pluck('name', 'id')->all();
+        CRUD::addField([
+            'name'        => 'Sub',
+            'label'       => "Subcategories",
+            'type'        => 'select_from_array',
+            'options'     => $subcategories,
+            'allows_null' => true,
+            'default'     => 'one',
+        ]);
         CRUD::field('abstract');
         CRUD::field('content');
 
@@ -141,7 +143,24 @@ class ArticlesCrudController extends CrudController
     {
         $this->setupCreateOperation();
         CRUD::field('title');
-        CRUD::field('categories')->label('Category')->type('relationship')->options(function ($query){return $query->where('type', 'Category')->get();});
+        $categories = Categories::where('type','Category')->pluck('name', 'id')->all();
+        CRUD::addField([
+            'name'        => 'Cat',
+            'label'       => "Categories",
+            'type'        => 'select_from_array',
+            'options'     => $categories,
+            'allows_null' => false,
+            'default'     => 'one',
+        ]);
+        $subcategories = Categories::where('type','SubCategory')->pluck('name', 'id')->all();
+        CRUD::addField([
+            'name'        => 'Sub',
+            'label'       => "Subcategories",
+            'type'        => 'select_from_array',
+            'options'     => $subcategories,
+            'allows_null' => true,
+            'default'     => 'one',
+        ]);
         CRUD::field('abstract');
         CRUD::field('content');
     }
