@@ -37,8 +37,11 @@ class ArticlesCrudController extends CrudController
         $cat= $this->crud->getRequest()->request->get('Cat');
         $sub= $this->crud->getRequest()->request->get('Sub');
         $catsub=[$cat,$sub];
-        $this->data["entry"]->categories()->attach($catsub);
-
+        if($sub == null){
+            $this->data["entry"]->categories()->sync($cat);
+        } else {
+            $this->data["entry"]->categories()->sync($catsub);
+        }
         return $response;
     }
     public function update()
@@ -160,7 +163,7 @@ class ArticlesCrudController extends CrudController
             'options'     => $subcategories,
             'allows_null' => true,
             'default'     => 'one',
-        ]);
+        ])->nullable();
         CRUD::field('abstract');
         CRUD::field('content');
     }
